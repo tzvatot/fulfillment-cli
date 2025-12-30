@@ -1,0 +1,26 @@
+name: compute-instance-test
+description: Mock compute instances and templates for testing CLI
+
+templates:
+  - id: tpl-small-001
+    name: small-instance
+    title: Small Instance Template
+    description: A small compute instance configuration
+
+  - id: tpl-large-001
+    name: large-instance
+    title: Large Instance Template
+    description: A large compute instance configuration
+
+instances:
+  - id: ci-mock-12345
+    name: mock-instance
+    template: tpl-small-001
+    state: COMPUTE_INSTANCE_STATE_READY
+    ipAddress: 192.168.1.100
+
+  - id: ci-mock-67890
+    name: test-instance
+    template: tpl-large-001
+    state: COMPUTE_INSTANCE_STATE_PROGRESSING
+    ipAddress: 192.168.1.101
