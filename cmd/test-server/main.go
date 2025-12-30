@@ -37,9 +37,8 @@ import (
 )
 
 const (
-	serverPort                         = "8080"
-	defaultScenarioFile                = "internal/testing/testdata/cluster-lifecycle.yaml"
-	defaultComputeInstanceScenarioFile = "internal/testing/testdata/compute-instances-and-templates.yaml"
+	serverPort          = "8080"
+	defaultScenarioFile = "internal/testing/testdata/cluster-lifecycle.yaml"
 )
 
 // loggingEventsServer wraps EventsServerFuncs to add logging for the standalone server
@@ -250,13 +249,6 @@ func main() {
 	}
 	log.Printf("Loaded event scenario: %s - %s", scenario.Name, scenario.Description)
 
-	// Load compute instance scenario from file
-	ciScenario, err := testing.LoadComputeInstanceScenarioFromFile(defaultComputeInstanceScenarioFile)
-	if err != nil {
-		log.Fatalf("Failed to load compute instance scenario from %s: %v", defaultComputeInstanceScenarioFile, err)
-	}
-	log.Printf("Loaded compute instance scenario: %s - %s", ciScenario.Name, ciScenario.Description)
-
 	listener, err := net.Listen("tcp", "127.0.0.1:"+serverPort)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
@@ -271,8 +263,6 @@ func main() {
 	eventsv1.RegisterEventsServer(grpcServer, &loggingEventsServer{EventsServerFuncs: eventsServerFuncs})
 
 	ffv1.RegisterClustersServer(grpcServer, &clustersServer{})
-	ffv1.RegisterComputeInstancesServer(grpcServer, &computeInstancesServer{scenario: ciScenario})
-	ffv1.RegisterComputeInstanceTemplatesServer(grpcServer, &computeInstanceTemplatesServer{scenario: ciScenario})
 	metadatav1.RegisterMetadataServer(grpcServer, &metadataServer{})
 
 	// Register health service
